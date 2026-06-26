@@ -6,7 +6,7 @@ from typing import Optional
 
 logger = logging.getLogger(__name__)
 
-X_API_BASE = "https://api.twitter.com/2"
+X_API_BASE = "https://api.x.com/2"
 
 
 @dataclass
@@ -19,7 +19,7 @@ class Post:
 
 
 def _headers() -> dict:
-    token = os.environ["X_API_TOKEN"]
+    token = os.environ["X_API_BEARER_TOKEN"]
     return {"Authorization": f"Bearer {token}"}
 
 
