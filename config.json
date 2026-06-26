@@ -1,0 +1,15 @@
+{
+  "watchlist": [
+    "MistralAI",
+    "MetaAI",
+    "OpenAI",
+    "AnthropicAI",
+    "GoogleDeepMind",
+    "xai"
+  ],
+  "poll_interval_seconds": 900,
+  "filter": {
+    "original_posts_only": true,
+    "keywords": []
+  }
+}
