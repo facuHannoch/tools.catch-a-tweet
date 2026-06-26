@@ -1,5 +1,13 @@
+# secrets
 .env
+
+# python
 .venv/
-state.json
 __pycache__/
 *.pyc
+
+# runtime state
+state.json
+
+# node/bun
+node_modules/

@@ -6,10 +6,10 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=azureuser
-WorkingDirectory=/home/azureuser/libs/catch-a-tweet
-Environment=PYTHONPATH=/home/azureuser/libs/catch-a-tweet/src
-EnvironmentFile=/home/azureuser/libs/catch-a-tweet/.env
-ExecStart=/home/azureuser/libs/catch-a-tweet/.venv/bin/python src/runner.py
+WorkingDirectory=/home/azureuser/libs/catch-a-tweet/poller
+Environment=PYTHONPATH=/home/azureuser/libs/catch-a-tweet/poller/src
+EnvironmentFile=/home/azureuser/libs/catch-a-tweet/poller/.env
+ExecStart=/home/azureuser/libs/catch-a-tweet/poller/.venv/bin/python src/runner.py
 Restart=on-failure
 RestartSec=30
 StandardOutput=journal
