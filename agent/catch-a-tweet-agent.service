@@ -1,0 +1,18 @@
+[Unit]
+Description=catch-a-tweet agent — Telegram bot webhook with ACP/Claude Code
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=azureuser
+WorkingDirectory=/home/azureuser/libs/catch-a-tweet/agent
+EnvironmentFile=/home/azureuser/libs/catch-a-tweet/agent/.env
+ExecStart=/home/azureuser/.bun/bin/bun run index.ts
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
