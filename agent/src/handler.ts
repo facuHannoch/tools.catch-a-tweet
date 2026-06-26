@@ -4,8 +4,7 @@ import { readLastAlert, readAgentState, writeAgentState } from "./state";
 const sessions = new SessionManager(new FileSessionStore());
 
 export async function handleMessage(userText: string): Promise<string> {
-  const lastAlert = readLastAlert();
-  const agentState = readAgentState();
+  const [lastAlert, agentState] = await Promise.all([readLastAlert(), readAgentState()]);
 
   const isNewSession =
     !agentState || !lastAlert || agentState.alert_id !== lastAlert.alert_id;
@@ -26,7 +25,7 @@ export async function handleMessage(userText: string): Promise<string> {
     const session = await AgentSession.create(sessionConfig);
     const result = await session.prompt(context);
 
-    writeAgentState({
+    await writeAgentState({
       agentSessionId: session.agentSessionId ?? "",
       alert_id: lastAlert?.alert_id ?? "",
     });
@@ -40,6 +39,12 @@ export async function handleMessage(userText: string): Promise<string> {
     });
 
     const result = await session.prompt(userText);
+
+    await writeAgentState({
+      agentSessionId: session.agentSessionId ?? agentState.agentSessionId,
+      alert_id: agentState.alert_id,
+    });
+
     await session.stop();
     return result.text ?? "(no response)";
   }

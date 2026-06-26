@@ -17,22 +17,24 @@ export interface AgentState {
   alert_id: string;
 }
 
-export function readLastAlert(): LastAlert | null {
+export async function readLastAlert(): Promise<LastAlert | null> {
   try {
-    return JSON.parse(Bun.file(LAST_ALERT_FILE).toString());
+    const text = await Bun.file(LAST_ALERT_FILE).text();
+    return JSON.parse(text);
   } catch {
     return null;
   }
 }
 
-export function readAgentState(): AgentState | null {
+export async function readAgentState(): Promise<AgentState | null> {
   try {
-    return JSON.parse(Bun.file(AGENT_STATE_FILE).toString());
+    const text = await Bun.file(AGENT_STATE_FILE).text();
+    return JSON.parse(text);
   } catch {
     return null;
   }
 }
 
-export function writeAgentState(state: AgentState): void {
-  Bun.write(AGENT_STATE_FILE, JSON.stringify(state, null, 2));
+export async function writeAgentState(state: AgentState): Promise<void> {
+  await Bun.write(AGENT_STATE_FILE, JSON.stringify(state, null, 2));
 }
