@@ -4,7 +4,7 @@ import { readLastAlert, readAgentState, writeAgentState } from "./state";
 const sessions = new SessionManager(new FileSessionStore());
 
 const CLAUDE_ADAPTER = {
-  command: ["claude", "--print"],
+  command: ["/home/azureuser/.bun/bin/bunx", "@zed-industries/claude-agent-acp"],
   ptyCommand: ["claude"],
 };
 
@@ -25,7 +25,7 @@ async function getSession(alertId: string): Promise<AgentSession> {
   const session = await AgentSession.create({
     adapter: CLAUDE_ADAPTER,
     adapterId: "claude",
-    mode: "degraded",
+    mode: "normal",
     sessions,
     defaultPermission: "approve",
     cwd: process.cwd(),
