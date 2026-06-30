@@ -15,6 +15,9 @@ async function sendReply(text: string): Promise<void> {
 Bun.serve({
   port: PORT,
   async fetch(req) {
+    const url = new URL(req.url);
+    if (url.pathname === "/test") return new Response("catch-a-tweet agent is up", { status: 200 });
+
     if (req.method !== "POST") return new Response("ok");
 
     let update: any;

@@ -52,13 +52,13 @@ export async function handleMessage(userText: string): Promise<string> {
 
   let prompt = userText;
   if (!hadActiveSession && lastAlert) {
-    prompt = `You are assisting a builder who monitors X accounts for new posts to react to quickly.
+    prompt = `Here are all the latest posts:
 
-The most recent monitored post:
-Account: @${lastAlert.handle}
-Content: ${lastAlert.text}
-Link: ${lastAlert.post_url}
-Posted at: ${lastAlert.sent_at}
+${lastAlert.message}
+
+---
+
+The user wants to engage in X and increase his audience.
 
 ---
 

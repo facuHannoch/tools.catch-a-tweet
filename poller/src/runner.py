@@ -8,7 +8,7 @@ load_dotenv()
 
 from source import get_new_posts
 from store import load_state, save_state, get_since_id, set_since_id
-from notify import send_alert
+from notify import send_batch_alert, AlertPost
 
 logging.basicConfig(
     level=logging.INFO,
@@ -37,7 +37,8 @@ def passes_filter(post, cfg: dict) -> bool:
 
 
 def run_cycle(watchlist: list, cfg: dict, state: dict, seeding: bool) -> int:
-    alerts_sent = 0
+    pending: list[AlertPost] = []
+
     for handle in watchlist:
         since_id = get_since_id(state, handle)
         posts = get_new_posts(handle, since_id)
@@ -45,24 +46,34 @@ def run_cycle(watchlist: list, cfg: dict, state: dict, seeding: bool) -> int:
         if not posts:
             continue
 
-        # posts are newest-first; track the highest ID seen
         newest_id = posts[0].id
 
         if seeding:
-            # first run with no state — record baseline without alerting
             set_since_id(state, handle, newest_id)
             logger.info("Seeded baseline for @%s at post %s", handle, newest_id)
             continue
 
         for post in posts:
             if passes_filter(post, cfg):
-                send_alert(post.author_handle, post.text, post.id)
-                alerts_sent += 1
+                from datetime import datetime, timezone
+                pending.append(AlertPost(
+                    handle=post.author_handle,
+                    display_name=post.author_handle,
+                    text=post.text,
+                    post_id=post.id,
+                    post_url=f"https://x.com/{post.author_handle}/status/{post.id}",
+                    profile_url=f"x.com/{post.author_handle}",
+                    sent_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+                ))
 
         set_since_id(state, handle, newest_id)
 
     save_state(state)
-    return alerts_sent
+
+    if pending:
+        send_batch_alert(pending)
+
+    return len(pending)
 
 
 def main():

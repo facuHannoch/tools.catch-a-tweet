@@ -5,7 +5,8 @@
     "OpenAI",
     "AnthropicAI",
     "GoogleDeepMind",
-    "xai"
+    "xai",
+    "facus026"
   ],
   "poll_interval_seconds": 900,
   "filter": {

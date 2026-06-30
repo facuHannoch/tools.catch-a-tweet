@@ -6,9 +6,7 @@ const AGENT_STATE_FILE = join(import.meta.dir, "..", "agent_state.json");
 
 export interface LastAlert {
   alert_id: string;
-  handle: string;
-  text: string;
-  post_url: string;
+  message: string;
   sent_at: string;
 }
 
