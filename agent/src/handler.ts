@@ -50,10 +50,19 @@ export async function handleMessage(userText: string): Promise<string> {
 
   const session = await getSession(alertId);
 
-  // include context whenever starting a fresh process (restart or new alert)
   let prompt = userText;
   if (!hadActiveSession && lastAlert) {
-    prompt = `Context: @${lastAlert.handle} just posted on X:\n"${lastAlert.text}"\n${lastAlert.post_url}\n\nUser message: ${userText}`;
+    prompt = `You are assisting a builder who monitors X accounts for new posts to react to quickly.
+
+The most recent monitored post:
+Account: @${lastAlert.handle}
+Content: ${lastAlert.text}
+Link: ${lastAlert.post_url}
+Posted at: ${lastAlert.sent_at}
+
+---
+
+${userText}`;
   }
 
   const result = await session.prompt(prompt);
