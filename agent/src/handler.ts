@@ -46,12 +46,13 @@ export async function handleMessage(userText: string): Promise<string> {
   const [lastAlert, agentState] = await Promise.all([readLastAlert(), readAgentState()]);
 
   const alertId = lastAlert?.alert_id ?? "";
-  const isNewAlert = alertId !== (agentState?.alert_id ?? "");
+  const hadActiveSession = !!activeSession && activeAlertId === alertId;
 
   const session = await getSession(alertId);
 
+  // include context whenever starting a fresh process (restart or new alert)
   let prompt = userText;
-  if (isNewAlert && lastAlert) {
+  if (!hadActiveSession && lastAlert) {
     prompt = `Context: @${lastAlert.handle} just posted on X:\n"${lastAlert.text}"\n${lastAlert.post_url}\n\nUser message: ${userText}`;
   }
 
